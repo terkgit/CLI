@@ -1,22 +1,26 @@
 import os
 import subprocess
-import sys
 import time
 
 
-print("before")
 testFile=open("test.out","w+")
 subprocess.Popen("testapp.bat",stdout=testFile)
-# pid = subprocess.Popen([sys.executable, "testapp.bat"])
-# os.system("start testapp.bat -> test.out")
-count=0
 outFile=open("test.out","r")
-
-for i in range(20):
+idleCount=0
+keepRunning=True
+while (keepRunning):
 	count=0
 	for line in outFile:
 		print(line, end = '')
 		count+=1
+		if ("Test Passed" in line):
+			keepRunning=False
+	if (count==0):
+		idleCount+=1
+	else:
+		idleCount=0
+	if (idleCount>=6):
+		keepRunning=False
 	# print("__",count)
 	time.sleep(1)
 print("after")
